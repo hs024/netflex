@@ -20,11 +20,11 @@ It supports user authentication, movie upload, watchlist, likes/dislikes, and a 
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="public/readmepicture/i1.jpg" width="80%" alt="Homepage" />
+  <img src="public/readmepicture/i1.png" width="80%" alt="Homepage" />
   <br/><br/>
-  <img src="public/readmepicture/i2.jpg" width="80%" alt="Movie Details" />
+  <img src="public/readmepicture/i2.png" width="80%" alt="Movie Details" />
   <br/><br/>
-  <img src="public/readmepicture/i3.jpg" width="80%" alt="Dashboard / Upload" />
+  <img src="public/readmepicture/i3.png" width="80%" alt="Dashboard / Upload" />
 </div>
 
 ---
