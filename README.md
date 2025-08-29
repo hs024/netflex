@@ -1,40 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🎬 Netflex
 
-## Getting Started
+A full-stack movie streaming platform inspired by Netflix, built with **Next.js, Supabase, and TailwindCSS**.  
+It supports user authentication, movie upload, watchlist, likes/dislikes, and a polished UI similar to Netflix.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔑 **Authentication** with Supabase (sign up, login, logout)  
+- 🎥 **Movie upload** (title, description, genre + video storage in Supabase)  
+- ❤️ **Like/Dislike reactions** per user per movie (YouTube style)  
+- ⭐ **Watchlist support** (add/remove movies to your personal list)  
+- 📺 **Responsive Netflix-style UI** (grid, banners, hover effects)  
+- 🔍 **Browse movies** with genres & descriptions  
+- 🗄️ **Supabase backend** for DB + file storage  
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## 📸 Screenshots
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+<div align="center">
+  <img src="public/readmepicture/i1.jpg" width="80%" alt="Homepage" />
+  <br/><br/>
+  <img src="public/readmepicture/i2.jpg" width="80%" alt="Movie Details" />
+  <br/><br/>
+  <img src="public/readmepicture/i3.jpg" width="80%" alt="Dashboard / Upload" />
+</div>
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend:** Next.js (React 18, App Router), TailwindCSS  
+- **Backend & Auth:** Supabase (Postgres + Auth + Storage)  
+- **UI Components:** Shadcn/UI, Lucide Icons, Framer Motion  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📂 Project Structure
 
-## Deploy on Vercel
+netflex/
+ ┣ components/        # Reusable UI components
+ ┣ lib/               # Supabase client
+ ┣ pages/             # Next.js pages
+ ┣ public/            # Static assets (including readme screenshots)
+ ┣ styles/            # TailwindCSS styles
+ ┗ utils/             # Helpers
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+#### its important made lib folder in root then made supabase.js in it then configure here supabase client.
+## Made by Himanshu
