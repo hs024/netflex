@@ -1,115 +1,143 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// pages/index.js
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
+import Navbar from "../components/Navbar";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  const [movies, setMovies] = useState([]);
+  const [watchlistIds, setWatchlistIds] = useState([]);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    fetchMovies();
+    fetchWatchlist();
+
+    // Hide splash after 2.5s
+    const timer = setTimeout(() => setShowSplash(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const fetchMovies = async () => {
+    const { data, error } = await supabase
+      .from("movies")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setMovies(data);
+  };
+
+  const fetchWatchlist = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("watchlist")
+      .select("movie_id")
+      .eq("user_id", user.id);
+
+    if (!error && data) setWatchlistIds(data.map((item) => item.movie_id));
+  };
+
+  const moviesByGenre = movies.reduce((acc, movie) => {
+    if (!acc[movie.genre]) acc[movie.genre] = [];
+    acc[movie.genre].push(movie);
+    return acc;
+  }, {});
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="bg-[#141414] min-h-screen text-white relative overflow-hidden">
+      {/* Splash Screen */}
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 0, scale: 3, filter: "brightness(2)" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <img
+              src="/banner/c2.jpg"
+              alt="splash"
+              className="w-full h-full object-cover"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Navbar />
+
+      {/* Main Banner */}
+      <div className="w-full overflow-hidden">
+        <div className="flex">
+          {["banner/b1.jpeg", "banner/c2.jpg", "banner/b3.jpeg"].map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`banner-${i}`}
+              className="w-full"
+              style={{ height: "310px", objectFit: "cover" }}
+            />
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Recently Added */}
+      <section className="p-6">
+        <h1 className="text-3xl font-bold mb-4">Recently Added</h1>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
+          {movies.slice(0, 4).map((movie) => (
+            <Link href={`/watch/${movie.id}`} key={movie.id}>
+              <div className="relative bg-[#1f1f1f] rounded overflow-hidden shadow hover:scale-105 transition-transform duration-200 cursor-pointer">
+                <img
+                  src={movie.thumbnail_url}
+                  alt={movie.title}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-2">
+                  <h2 className="font-semibold">{movie.title}</h2>
+                </div>
+                {watchlistIds.includes(movie.id) && (
+                  <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow">
+                    My List
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Movies by genre */}
+        {Object.keys(moviesByGenre).map((genre) => (
+          <div key={genre} className="mb-10">
+            <h2 className="text-2xl font-bold mb-3">{genre}</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {moviesByGenre[genre].map((movie) => (
+                <Link href={`/watch/${movie.id}`} key={movie.id}>
+                  <div className="relative bg-[#1f1f1f] rounded overflow-hidden shadow hover:scale-105 transition-transform duration-200 cursor-pointer">
+                    <img
+                      src={movie.thumbnail_url}
+                      alt={movie.title}
+                      className="w-full h-40 object-cover"
+                    />
+                    <div className="p-2">
+                      <h2 className="font-semibold">{movie.title}</h2>
+                    </div>
+                    {watchlistIds.includes(movie.id) && (
+                      <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded shadow">
+                        My List
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }
